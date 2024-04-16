@@ -420,7 +420,7 @@ module NewRelic
         data, size, serialize_finish_ts = nil
         begin
           data = @marshaller.dump(payload, options)
-          if data.present? && data.is_a?(String) && data.include?('marketing_website/index_page') && payload.present? && payload.is_a?(Array) && payload[1].present? && payload[1].is_a?(Array) && payload[1][0].present? && payload[1][0].respond_to?(:root_node)
+          if payload.present? && payload.is_a?(Array) && payload[1].present? && payload[1].is_a?(Array) && payload[1][0].present? && payload[1][0].respond_to?(:root_node)
             timeline = []
             iterate_through_nodes_aron(payload[1][0].root_node, timeline) 
             Rails.logger.error("#{timeline.sort_by{|x| x[:exit_timestamp]}}")
