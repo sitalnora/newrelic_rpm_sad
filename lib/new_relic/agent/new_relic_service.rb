@@ -418,13 +418,13 @@ module NewRelic
         start_ts = Time.now
 
         data, size, serialize_finish_ts = nil
-        timeline = []
-        if data.present? && data.is_a?(String) && data.include?('marketing_website/index_page')
-          iterate_through_nodes_aron(payload[1][0].root_node, timeline) 
-          Rails.logger.error("#{timeline.sort_by{|x| x[:exit_timestamp]}}")
-        end
         begin
           data = @marshaller.dump(payload, options)
+          if data.present? && data.is_a?(String) && data.include?('marketing_website/index_page')
+            timeline = []
+            iterate_through_nodes_aron(payload[1][0].root_node, timeline) 
+            Rails.logger.error("#{timeline.sort_by{|x| x[:exit_timestamp]}}")
+          end
         rescue StandardError, SystemStackError => e
           handle_serialization_error(method, e)
         end
