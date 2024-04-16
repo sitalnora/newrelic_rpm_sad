@@ -419,8 +419,10 @@ module NewRelic
 
         data, size, serialize_finish_ts = nil
         timeline = []
-        iterate_through_nodes_aron(payload[1][0].root_node, timeline) if data.include?('marketing_website/index_page')
-        Rails.logger.error("#{timeline.sort_by{|x| x[:exit_timestamp]}}")
+        if data.present? && data.is_a?(String) && data.include?('marketing_website/index_page')
+          iterate_through_nodes_aron(payload[1][0].root_node, timeline) 
+          Rails.logger.error("#{timeline.sort_by{|x| x[:exit_timestamp]}}")
+        end
         begin
           data = @marshaller.dump(payload, options)
         rescue StandardError, SystemStackError => e
